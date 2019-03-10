@@ -1,0 +1,54 @@
+---
+variables:
+  name: "{{ env `VM_NAME` }}"
+  cpus: "1"
+  memory: "1024"
+  distro_codename: "{{ env `DISTRO_CODENAME` }}"
+  distro_mirror: http://archive.ubuntu.com/ubuntu/dists/
+  ssh_username: "integr8"
+  ssh_password: "integr8"
+  preseed_file_name: ubuntu-minimal-preseed.cfg
+  disk_size: "51200"
+  headless: "false"
+builders:
+  - vm_name: "{{ user `name` }}"
+    type: "virtualbox-iso"
+    guest_os_type: "Ubuntu_64"
+    iso_checksum_type: "sha256"
+    iso_checksum_url: "{{ user `distro_mirror` }}{{ user `distro_codename` }}-updates/main/installer-amd64/current/images/SHA256SUMS"
+    iso_urls: 
+      - "{{ user `distro_mirror` }}{{ user `distro_codename` }}-updates/main/installer-amd64/current/images/netboot/mini.iso"
+    ssh_username: "{{ user `ssh_username` }}"
+    ssh_password: "{{ user `ssh_password` }}"
+    ssh_wait_timeout: "60m"
+    headless: "{{ user `headless` }}"
+    output_directory: "{{ user `name` }}-virtualbox-iso"
+    shutdown_command: "echo 'vagrant' | sudo -S shutdown -P now"
+    hard_drive_interface: "sata"
+    disk_size: "{{ user `disk_size` }}"
+    boot_wait: "5s"
+    http_directory: "http"
+    keep_registered: "true"
+    vboxmanage:
+      - 
+          - "modifyvm"
+          -  "{{ .Name }}"
+          -  "--cpus"
+          -  "{{ user `cpus` }}"
+      -
+          - "modifyvm"
+          -  "{{ .Name }}"
+          -  "--memory"
+          -  "{{ user `memory` }}"
+      -
+          - "modifyvm"
+          -  "{{ .Name }}"
+          -  "--audiocontroller"
+          -  "hda"
+    boot_command:
+      - "<tab>"
+      - "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `preseed_file_name` }} "
+      - "auto=true "
+      - "net.ifnames=0 "
+      - "hostname=localhost "
+      -  "<enter>"
