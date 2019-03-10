@@ -9,7 +9,7 @@ variables:
   ssh_password: "integr8"
   preseed_file_name: ubuntu-minimal-preseed.cfg
   disk_size: "51200"
-  headless: "false"
+  headless: "true"
 builders:
   - vm_name: "{{ user `name` }}"
     type: "virtualbox-iso"
@@ -23,7 +23,7 @@ builders:
     ssh_wait_timeout: "60m"
     headless: "{{ user `headless` }}"
     output_directory: "{{ user `name` }}-virtualbox-iso"
-    shutdown_command: "echo 'vagrant' | sudo -S shutdown -P now"
+    shutdown_command: "echo 'integr8' | sudo -S shutdown -P now"
     hard_drive_interface: "sata"
     disk_size: "{{ user `disk_size` }}"
     boot_wait: "5s"
