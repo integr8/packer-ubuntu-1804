@@ -9,7 +9,7 @@ variables:
   ssh_password: "integr8"
   preseed_file_name: ubuntu-minimal-preseed.cfg
   disk_size: "51200"
-  headless: "false"
+  headless: "true"
 builders:
   - vm_name: "{{ user `name` }}"
     type: "virtualbox-iso"
