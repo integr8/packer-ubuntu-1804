@@ -5,3 +5,5 @@ packer_cache/
 *.box
 *.json
 *.vdi
+*.ovf
+*.vmdk
